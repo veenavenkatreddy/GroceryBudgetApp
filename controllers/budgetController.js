@@ -1,6 +1,5 @@
 const Budget = require('../models/budgetModel');
 const Item = require('../models/itemModel');
-const { generateAlerts } = require('../utils/alerts');
 const { generateTipsForUser } = require('../utils/tipGenerator');
 const { success, fail } = require('../utils/responseHandler');
 
@@ -65,8 +64,36 @@ exports.getBudget = async (req, res) => {
 
     if (!budget) return fail(res, new Error('Budget not found'), 404);
 
-    const alerts = generateAlerts(budget.percentageSpent);
-    const tips = await generateTipsForUser(req.user._id, budget._id);
+    // Generate spending alerts
+    const alerts = [];
+    const percentageSpent = budget.percentageSpent;
+    
+    // Check budget thresholds
+    if (percentageSpent >= 90) {
+      alerts.push({
+        type: 'critical',
+        message: 'Critical: You have used 90% or more of your budget!',
+        percentage: percentageSpent
+      });
+    } else if (percentageSpent >= 75) {
+      alerts.push({
+        type: 'warning',
+        message: 'Warning: You have used 75% of your budget',
+        percentage: percentageSpent
+      });
+    } else if (percentageSpent >= 50) {
+      alerts.push({
+        type: 'info',
+        message: 'Info: You have used 50% of your budget',
+        percentage: percentageSpent
+      });
+    }
+    
+    // Generate tips based on spending
+    let tips = [];
+    if (percentageSpent >= 50) {
+      tips = await tipGenerator.generateTipsForUser(req.user._id, budget._id);
+    }
 
     success(res, {
       data: budget,
@@ -122,6 +149,42 @@ exports.deleteBudget = async (req, res) => {
     fail(res, error);
   }
 };
+
+// Get budget history
+exports.getBudgetHistory = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+    
+    const query = { 
+      userId: req.user._id,
+      isActive: false
+    };
+
+    if (startDate || endDate) {
+      query['period.start'] = {};
+      if (startDate) query['period.start'].$gte = new Date(startDate);
+      if (endDate) query['period.start'].$lte = new Date(endDate);
+    }
+
+    const budgets = await Budget.find(query)
+      .populate('categories.categoryId')
+      .sort('-period.start');
+
+    // Calculate statistics
+    const stats = {
+      totalBudgets: budgets.length,
+      totalSpent: budgets.reduce((sum, b) => sum + b.currentSpent, 0),
+      totalLimit: budgets.reduce((sum, b) => sum + b.totalLimit, 0),
+      averageSpent: budgets.length > 0 ? 
+        budgets.reduce((sum, b) => sum + b.currentSpent, 0) / budgets.length : 0
+    };
+
+    success(res, { data: budgets });
+  } catch (error) {
+    fail(res, error);
+  }
+};
+
 
 exports.getActiveBudget = async (req, res) => {
   try {
