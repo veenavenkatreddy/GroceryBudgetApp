@@ -40,9 +40,8 @@ const itemSchema = new mongoose.Schema({
     default: Date.now
   },
   notes: {
-  type: String,
-  trim: true,
-  maxlength: 500
+    type: String,
+    maxlength: [500, 'Notes cannot exceed 500 characters']
   },
   createdAt: {
     type: Date,

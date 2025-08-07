@@ -1,17 +1,32 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/itemController');
-const { itemValidationRules, mongoIdValidation } = require('../middleware/validation');
 const { protect } = require('../middleware/auth');
-const audit = require('../middleware/auditLogger');
+const { itemValidationRules, queryValidationRules, mongoIdValidation } = require('../middleware/validation');
+const {
+  createItem,
+  getItems,
+  getItem,
+  updateItem,
+  deleteItem,
+  getRunningTotals,
+  batchCreateItems
+} = require('../controllers/itemController');
 
+// All routes require authentication
 router.use(protect);
 
-router.post('/', itemValidationRules.create, audit.itemCreate, controller.createItem);
-router.post('/batch', itemValidationRules.batchCreate, audit.itemBatchCreate, controller.batchCreateItems);
-router.get('/', controller.getItems);
-router.get('/:id', mongoIdValidation(), controller.getItem);
-router.put('/:id', itemValidationRules.update, audit.itemUpdate, controller.updateItem);
-router.delete('/:id', mongoIdValidation(), audit.itemDelete, controller.deleteItem);
+// Item routes
+router.route('/')
+  .get([...queryValidationRules.pagination, ...queryValidationRules.dateRange], getItems)
+  .post(itemValidationRules.create, createItem);
+
+router.post('/batch', itemValidationRules.batchCreate, batchCreateItems);
+
+router.route('/:id')
+  .get(mongoIdValidation(), getItem)
+  .put(itemValidationRules.update, updateItem)
+  .delete(mongoIdValidation(), deleteItem);
+
+router.get('/budget/:budgetId/totals', mongoIdValidation('budgetId'), getRunningTotals);
 
 module.exports = router;

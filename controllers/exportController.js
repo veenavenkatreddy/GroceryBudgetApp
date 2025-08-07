@@ -40,9 +40,6 @@ exports.exportBudgetPDF = async (req, res) => {
       categorySpending[categoryName] += item.price * (item.quantity || 1);
     });
 
-    // Get user's currency preference
-    const user = await User.findById(userId).select('settings');
-    const userCurrency = user?.settings?.preferredCurrency || 'GBP';
 
     // Generate PDF with user's currency
     const pdfBuffer = await pdfGenerator.generateBudgetPDF(budget, items, categorySpending, userCurrency);
