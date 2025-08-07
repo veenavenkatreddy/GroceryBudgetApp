@@ -8,7 +8,7 @@ exports.protect = async (req, res, next) => {
       return res.status(401).json({ success: false, message: 'Missing token' });
 
     const token = header.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     req.user = await User.findById(decoded.id).select('-password');
     if (!req.user)

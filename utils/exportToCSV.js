@@ -9,8 +9,10 @@ class ExportToCSV {
       const budget = await Budget.findOne({
         _id: budgetId,
         userId: userId
-      }).populate('categories.categoryId');
-
+      })
+      .populate('categories.categoryId');
+      
+      
       if (!budget) {
         throw new Error('Budget not found');
       }
@@ -81,7 +83,7 @@ class ExportToCSV {
       // Prepare item data for CSV
       const itemData = items.map(item => ({
         'Item Name': item.name,
-        'Category': item.categoryId.name,
+        'Category': item.categoryId.name || 'Uncategorized',
         'Price': item.price,
         'Quantity': item.quantity,
         'Total Cost': (item.price * item.quantity).toFixed(2),

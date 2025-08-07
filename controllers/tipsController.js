@@ -35,10 +35,12 @@ exports.getTips = async (req, res) => {
 
 exports.markTipHelpful = async (req, res) => {
   try {
-    const tip = await Tips.findById(req.params.id);
+    const tip = await Tips.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { helpfulCount: 1 } },
+      { new: true }
+    );
     if (!tip) return fail(res, new Error('Tip not found'), 404);
-
-    await tip.incrementHelpfulCount();
     success(res, { helpfulCount: tip.helpfulCount }, 'Marked helpful');
   } catch (error) {
     fail(res, error);

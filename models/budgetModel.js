@@ -36,6 +36,15 @@ const budgetSchema = new mongoose.Schema({
       min: 0
     }
   }],
+  history: [
+  {
+    budgetId: mongoose.Schema.Types.ObjectId,
+    userId: mongoose.Schema.Types.ObjectId,
+    changeType: String,
+    changes: mongoose.Schema.Types.Mixed,
+    timestamp: { type: Date, default: Date.now }
+  }
+  ],
   currentSpent: {
     type: Number,
     default: 0,

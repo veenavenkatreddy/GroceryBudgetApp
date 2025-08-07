@@ -12,6 +12,15 @@ class TipGenerator {
     };
   }
 
+  async generateTipsForUser(userId, budgetId) {
+    const patterns = await this.analyzeSpendingPatterns(userId, budgetId);
+    const patternTips = await this.generatePatternTips(patterns);
+    const thresholdTips = await this.generateBudgetThresholdTips(budgetId);
+    const seasonalTips = await this.getSeasonalTips();
+    return [...thresholdTips, ...seasonalTips, ...patternTips.map(t => t.tip)];
+  }
+
+
   // Generate tips based on budget usage
   async generateBudgetThresholdTips(budgetId) {
     try {

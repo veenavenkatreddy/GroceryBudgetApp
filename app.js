@@ -21,8 +21,8 @@ app.set('view engine', 'pug');
 app.set('views',path.join(__dirname, 'views'));
 
 // Routes
-const indexRoutes = require('./routes/index');
-app.use('/', indexRoutes);
+const indexRoutes = require('./routes');
+app.use(routes);
 
 // Server
 const PORT = process.env.PORT || 3000;

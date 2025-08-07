@@ -39,6 +39,11 @@ const itemSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  notes: {
+  type: String,
+  trim: true,
+  maxlength: 500
+  },
   createdAt: {
     type: Date,
     default: Date.now
