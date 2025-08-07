@@ -55,46 +55,6 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.updateProfile = async (req, res) => {
-  try {
-    const { username, email } = req.body;
-    const userId = req.user._id;
-
-    // Check if username or email already taken by another user
-    const existingUser = await User.findOne({
-      $or: [{ email }, { username }],
-      _id: { $ne: userId }
-    });
-
-    if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        message: 'Username or email already taken'
-      });
-    }
-
-    // Update user
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { username, email },
-      { new: true, runValidators: true }
-    );
-
-    res.json({
-      success: true,
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email
-      }
-    });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message
-    });
-  }
-};
 
 exports.logout = (req, res) => {
   // Token-based: logout handled client-side
