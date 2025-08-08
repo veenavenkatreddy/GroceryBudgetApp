@@ -19,7 +19,7 @@ router.get('/', (req, res) => {
 router.get('/register', async (req, res) => {
   res.render('register', {
     title: 'CartWise Register',
-    activeTab: 'Register',
+    activeTab: 'register',
     user: req.user
   });
 });
@@ -28,7 +28,7 @@ router.get('/register', async (req, res) => {
 router.get('/login', async (req, res) => {
   res.render('login', {
     title: 'CartWise Login',
-    activeTab: 'Login',
+    activeTab: 'login',
     user: req.user
   });
 });
@@ -41,6 +41,15 @@ router.get('/budgets', protect, async (req, res) => {
     user: req.user
   });
 });
+
+router.get('/budget-detail', protect, async (req, res) => {
+  res.render('budget-detail', {
+    title: 'Budget Detail',
+    activeTab: 'budget-detail',
+    user: req.user
+  });
+});
+
 
 // Items - protected
 router.get('/items', protect, async (req, res) => {
