@@ -15,10 +15,6 @@ const historyRoutes = require('./routes/historyRoutes');
 const app = express();
 
 // Middleware  
-app.use(cors({
-  origin: true,
-  credentials: true
-}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));

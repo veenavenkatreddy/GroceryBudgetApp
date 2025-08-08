@@ -1,4 +1,350 @@
-extends layout
-
-block content
-  
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    meta(name='description' content='CartWise - Shop Smart, Save More - Smart grocery budgeting for students')
+    title CartWise - Shop Smart, Save More
+    
+    //- Bootstrap CSS & Icons
+    link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet')
+    link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css')
+    
+    //- Google Fonts
+    link(href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap' rel='stylesheet')
+    
+    //- Custom CSS
+    link(rel='stylesheet' href='/css/landing.css')
+    
+    //- AOS Animation Library
+    link(href='https://unpkg.com/aos@2.3.1/dist/aos.css' rel='stylesheet')
+    
+  body
+    //- Navigation
+    nav.navbar.navbar-expand-lg.navbar-light.fixed-top
+      .container
+        a.navbar-brand(href='/')
+          i.bi.bi-cart3.me-2
+          | CartWise
+        
+        button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarNav')
+          span.navbar-toggler-icon
+        
+        .collapse.navbar-collapse#navbarNav
+          ul.navbar-nav.mx-auto
+            li.nav-item
+              a.nav-link(href='#features') Features
+            li.nav-item
+              a.nav-link(href='#how-it-works') How It Works
+            li.nav-item
+              a.nav-link(href='#reviews') Reviews
+          
+          .navbar-nav
+            a.btn.btn-link.text-dark(href='/login') LOGIN 
+            a.btn.btn-dark.ms-2(href='/register') REGISTER
+    
+    //- Hero Section
+    section.hero-section
+      .container
+        .row.align-items-center.min-vh-100
+          .col-lg-6
+            .hero-content(data-aos='fade-up')
+              p.text-primary.fw-semibold.mb-3
+                i.bi.bi-shield-check.me-2
+                | Trusted by many students
+              h1.display-1.fw-bold.mb-4
+                | Smart
+                span.text-gradient  Grocery
+                br
+                | Budgeting for
+                br
+                span.text-primary Students
+              p.lead.mb-5
+                | Take control of your grocery expenses with intelligent tracking, real-time insights, and personalized tips designed for international students.
+            
+            .d-flex.flex-wrap.gap-3.mb-5
+              a.btn.btn-dark.btn-lg.px-4(href='/register')
+                | Get Started Free
+                i.bi.bi-arrow-right.ms-2
+            
+            .row.g-4.text-muted.small
+              .col-auto
+                .d-flex.align-items-center
+                  .icon-box.me-3
+                    i.bi.bi-infinity.text-primary
+                  div
+                    .fw-semibold.text-dark Free Forever
+                    .small No credit card required
+              .col-auto
+                .d-flex.align-items-center
+                  .icon-box.me-3
+                    i.bi.bi-shield-check.text-success
+                  div
+                    .fw-semibold.text-dark Bank-Level Security
+                    .small Your data is encrypted
+              .col-auto
+                .d-flex.align-items-center
+                  .icon-box.me-3
+                    i.bi.bi-globe2.text-info
+                  div
+                    .fw-semibold.text-dark Works Worldwide
+                    .small Multi-currency support
+          
+          .col-lg-6.d-flex.align-items-center
+            .budget-preview-wrapper.w-100(data-aos='fade-left' data-aos-delay='200')
+              .budget-preview-card
+                .budget-card-header
+                  .d-flex.align-items-center
+                    .avatar-group.me-3
+                      .avatar
+                      .avatar
+                      .avatar
+                  span.badge.bg-success-subtle.text-success
+                    i.bi.bi-arrow-up.me-1
+                    | On Track
+                .budget-card-body
+                  .mb-4
+                    .d-flex.justify-content-between.align-items-baseline.mb-3
+                      div
+                        p.text-muted.mb-1.small Monthly Budget
+                        h2.fw-bold.mb-0 £250.00
+                      div.text-end
+                        p.text-muted.mb-1.small Spent
+                        h3.fw-bold.text-primary.mb-0 £180.50
+                    .progress.mb-2(style='height: 12px;')
+                      .progress-bar(style='width: 72%' role='progressbar')
+                    .d-flex.justify-content-between.text-muted.small
+                      span
+                        i.bi.bi-check-circle.text-success.me-1
+                        | 72% used
+                      span.fw-semibold £69.50 left
+                  
+                  .categories
+                    h6.fw-semibold.mb-3 Top Categories
+                    .category-item.d-flex.align-items-center.p-3.rounded.mb-2.hover-lift
+                      .category-icon.bg-primary-subtle.text-primary
+                        i.bi.bi-cart3
+                      .ms-3.flex-grow-1
+                        .d-flex.justify-content-between.align-items-center
+                          div
+                            .fw-semibold Groceries
+                            .text-muted.small 48% of budget
+                          .fw-bold £120.30
+                    .category-item.d-flex.align-items-center.p-3.rounded.mb-2.hover-lift
+                      .category-icon.bg-success-subtle.text-success
+                        i.bi.bi-cup-straw
+                      .ms-3.flex-grow-1
+                        .d-flex.justify-content-between.align-items-center
+                          div
+                            .fw-semibold Snacks
+                            .text-muted.small 14% of budget
+                          .fw-bold £35.20
+                  
+                  .floating-elements
+                    .floating-badge.badge-1
+                      i.bi.bi-piggy-bank
+                      | Saved £45
+                    .floating-badge.badge-2
+                      i.bi.bi-trophy
+                      | Goal Met!
+    
+    //- Features Section
+    section.features-section.py-5#features
+      .container
+        .text-center.mb-5(data-aos='fade-up')
+          span.badge.bg-primary-subtle.text-primary.mb-3 Features
+          h2.display-2.fw-bold.mb-3 Everything you need to budget smarter
+          p.lead.text-muted.mx-auto(style='max-width: 600px;') Built specifically for international students, with features that understand your unique challenges.
+        
+        .row.g-4
+          .col-md-6.col-lg-4(data-aos='fade-up')
+            .feature-card.text-center.h-100
+              .feature-icon
+                i.bi.bi-pie-chart
+              h4.mb-3 Smart Budget Tracking
+              p.text-muted Track your grocery expenses with intelligent categorization and real-time spending insights.
+          .col-md-6.col-lg-4(data-aos='fade-up' data-aos-delay='100')
+            .feature-card.text-center.h-100
+              .feature-icon
+                i.bi.bi-globe
+              h4.mb-3 Multi-Currency Support
+              p.text-muted Perfect for international students - handle multiple currencies and exchange rates seamlessly.
+          .col-md-6.col-lg-4(data-aos='fade-up' data-aos-delay='200')
+            .feature-card.text-center.h-100
+              .feature-icon
+                i.bi.bi-wifi-off
+              h4.mb-3 Offline Functionality
+              p.text-muted Continue budgeting even without internet connection. Your data syncs when you're back online.
+          .col-md-6.col-lg-4(data-aos='fade-up' data-aos-delay='300')
+            .feature-card.text-center.h-100
+              .feature-icon
+                i.bi.bi-bar-chart
+              h4.mb-3 Visual Analytics
+              p.text-muted Beautiful charts and graphs help you understand your spending patterns and make better decisions.
+          .col-md-6.col-lg-4(data-aos='fade-up' data-aos-delay='400')
+            .feature-card.text-center.h-100
+              .feature-icon
+                i.bi.bi-bullseye
+              h4.mb-3 Goal Setting
+              p.text-muted Set monthly budgets and savings goals. Get personalized tips to stay on track.
+          .col-md-6.col-lg-4(data-aos='fade-up' data-aos-delay='500')
+            .feature-card.text-center.h-100
+              .feature-icon
+                i.bi.bi-download
+              h4.mb-3 Export Data
+              p.text-muted Download your budget data as CSV files for further analysis or record keeping
+    
+    //- How It Works Section
+    section.how-it-works.py-5#how-it-works
+      .container
+        .text-center.mb-5(data-aos='fade-up')
+          span.badge.bg-primary-subtle.text-primary.mb-3 How It Works
+          h2.display-2.fw-bold.mb-3 Start budgeting in 3 simple steps
+          p.lead.text-muted.mx-auto(style='max-width: 600px;') Get started in minutes and take control of your grocery spending
+        
+        .row.g-4.position-relative
+          .col-md-4(data-aos='fade-up')
+            .step-card.text-center
+              .step-number 1
+              h4.mb-3 Set Your Budget
+              p.text-muted Create your monthly grocery budget and set spending goals for different categories.
+              .feature-list.mt-3
+                .small.text-start
+                  .d-flex.align-items-center.mb-2
+                    i.bi.bi-check-circle-fill.text-success.me-2
+                    | Quick setup wizard
+                  .d-flex.align-items-center.mb-2
+                    i.bi.bi-check-circle-fill.text-success.me-2
+                    | Pre-defined categories
+                  .d-flex.align-items-center
+                    i.bi.bi-check-circle-fill.text-success.me-2
+                    | Custom limits
+          .col-md-4
+            .step-card.text-center
+              .step-number.step-2 2
+              h4 Track Expenses
+              p.text-muted Add your grocery purchases and let our smart categorization organize your spending.
+          .col-md-4
+            .step-card.text-center
+              .step-number.step-3 3
+              h4 Get Insights
+              p.text-muted Receive personalized tips and insights to optimize your spending and save money.
+    
+    //- Testimonials Section
+    section.testimonials-section.py-5#reviews
+      .container
+        .text-center.mb-5(data-aos='fade-up')
+          h2.display-2.fw-bold.mb-3 Loved by students worldwide
+      
+        .row.g-4
+          .col-md-4(data-aos='fade-up')
+            .testimonial-card
+              .stars.mb-3
+                i.bi.bi-star-fill
+                i.bi.bi-star-fill
+                i.bi.bi-star-fill
+                i.bi.bi-star-fill
+                i.bi.bi-star-fill
+              p.mb-4 "BudgetSmart helped me save <strong>£200 per month</strong> on groceries. The multi-currency feature is perfect for managing my budget from home."
+              .author
+                div
+                  .fw-bold Reethu Sharma
+                  .text-muted.small International Student, UK
+                  .mt-2
+                    span.badge.bg-success-subtle.text-success
+                      i.bi.bi-patch-check.me-1
+                      | Verified User
+          .col-md-4
+            .testimonial-card
+              .stars.mb-3
+                i.bi.bi-star-fill
+                i.bi.bi-star-fill
+                i.bi.bi-star-fill
+                i.bi.bi-star-fill
+                i.bi.bi-star-fill
+              p.mb-3 "Finally, a budgeting app that understands student life. The offline mode saved me when I had limited data."
+              .author
+                strong Voleti Manasa
+                br
+                small.text-muted Graduate Student, USA
+          .col-md-4
+            .testimonial-card
+              .stars.mb-3
+                i.bi.bi-star-fill
+                i.bi.bi-star-fill
+                i.bi.bi-star-fill
+                i.bi.bi-star-fill
+                i.bi.bi-star-fill
+              p.mb-3 "The cultural sensitivity and local grocery categories make this app so much better than generic budgeting tools."
+              .author
+                strong Bharath Kumar
+                br
+                small.text-muted International Student, UK
+    
+    //- CTA Section
+    section.cta-section.text-white.text-center.py-5
+      .container(data-aos='zoom-in')
+        .row.justify-content-center
+          .col-lg-8
+            h2.display-2.fw-bold.mb-4 Ready to take control of your grocery budget?
+            p.lead.mb-5 Join thousands of students who are already saving money with Cartwise
+            .d-flex.gap-3.justify-content-center.flex-wrap
+              a.btn.btn-light.btn-lg.px-5(href='/register')
+                | Start Free Today
+                i.bi.bi-arrow-right.ms-2
+            p.mt-4.small.opacity-75
+              i.bi.bi-shield-check.me-2
+              | No credit card required • Free forever • Works offline
+    
+    //- Footer
+    footer.footer.py-5
+      .container
+        .row
+          .col-lg-4.mb-4
+            h5.fw-bold
+              i.bi.bi-cart3.me-2
+              | CartWise
+            p.text-muted Smart budgeting made simple for international students.
+          .col-lg-2.col-md-4.mb-4
+            h6.fw-bold Product
+            ul.list-unstyled.mt-3
+              li.mb-2
+                a.text-muted.text-decoration-none(href='#features') Features
+              li.mb-2
+                a.text-muted.text-decoration-none(href='#') Pricing
+          .col-lg-2.col-md-4.mb-4
+            h6.fw-bold Support
+            ul.list-unstyled.mt-3
+              li.mb-2
+                a.text-muted.text-decoration-none(href='#') Help Center
+              li.mb-2
+                a.text-muted.text-decoration-none(href='#') Contact Us
+              li.mb-2
+                a.text-muted.text-decoration-none(href='#') Privacy Policy
+          .col-lg-2.col-md-4.mb-4
+            h6.fw-bold Company
+            ul.list-unstyled.mt-3
+              li.mb-2
+                a.text-muted.text-decoration-none(href='#') About
+              li.mb-2
+                a.text-muted.text-decoration-none(href='#') Blog
+              li.mb-2
+                a.text-muted.text-decoration-none(href='#') Careers
+        hr.my-4
+        .text-center.text-muted
+          p.mb-0 © 2025 CartWise. All rights reserved.
+    
+    //- Bootstrap JS
+    script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js')
+    
+    //- AOS Animation
+    script(src='https://unpkg.com/aos@2.3.1/dist/aos.js')
+    
+    //- Custom JS
+    script.
+      AOS.init({
+        duration: 800,
+        easing: 'ease-out-cubic',
+        once: true,
+        offset: 50
+      });
