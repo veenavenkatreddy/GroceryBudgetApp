@@ -1,0 +1,109 @@
+extends layout-sidebar
+
+block content
+  // Profile Header
+  .mb-4
+    h1.dashboard-title.mb-1 Profile Settings
+    p.dashboard-subtitle.text-muted.mb-0 Manage your account information and preferences
+  
+  .row
+    .col-lg-4
+      // Profile Card
+      .card.shadow-sm.mb-4.text-center.p-4
+        .rounded-circle.d-flex.align-items-center.justify-content-center.mx-auto.mb-3(style='width: 120px; height: 120px; font-size: 3rem; background: var(--bs-primary); color: white;')
+          i.bi.bi-person
+        h4.mb-1= user.username
+        p.text-muted.mb-2= user.email
+        .badge.bg-primary-subtle.text-primary Student Account
+    
+    .col-lg-8
+      // Account Information
+      .card.shadow-sm.mb-4
+        .card-header.d-flex.align-items-center
+          i.bi.bi-person-circle.me-2
+          span.fw-semibold Account Information
+        .card-body
+          form#profileForm
+            .row.g-3
+              .col-md-6
+                .form-floating
+                  input.form-control#username(type='text' value=user.username required)
+                  label(for='username') Username
+              .col-md-6
+                .form-floating
+                  input.form-control#email(type='email' value=user.email required)
+                  label(for='email') Email Address
+            .mt-3
+              button.btn.btn-primary(type='button' onclick='updateProfile()')
+                i.bi.bi-save.me-2
+                | Save Changes
+      
+      // Change Password
+      .card.shadow-sm.mb-4
+        .card-header.d-flex.align-items-center
+          i.bi.bi-key.me-2
+          span.fw-semibold Change Password
+        .card-body
+          form#passwordForm
+            .form-floating.mb-3
+              input.form-control#currentPassword(type='password' required)
+              label(for='currentPassword') Current Password
+            .row.g-3
+              .col-md-6
+                .form-floating
+                  input.form-control#newPassword(type='password' required minlength='6')
+                  label(for='newPassword') New Password
+              .col-md-6
+                .form-floating
+                  input.form-control#confirmPassword(type='password' required minlength='6')
+                  label(for='confirmPassword') Confirm New Password
+            .mt-3
+              button.btn.btn-primary(type='button' onclick='changePassword()')
+                i.bi.bi-shield-lock.me-2
+                | Update Password
+      
+      // Account Preferences
+      .card.shadow-sm
+        .card-header.d-flex.align-items-center
+          i.bi.bi-gear.me-2
+          span.fw-semibold Preferences
+        .card-body
+          // Currency Selection
+          .mb-4
+            label.form-label.fw-semibold(for='preferredCurrency') Preferred Currency
+            select.form-select#preferredCurrency
+              option(value='GBP' selected=(user.settings && user.settings.preferredCurrency === 'GBP')) GBP - British Pound (£)
+              option(value='USD' selected=(user.settings && user.settings.preferredCurrency === 'USD')) USD - US Dollar ($)
+              option(value='EUR' selected=(user.settings && user.settings.preferredCurrency === 'EUR')) EUR - Euro (€)
+              option(value='CAD' selected=(user.settings && user.settings.preferredCurrency === 'CAD')) CAD - Canadian Dollar (C$)
+              option(value='AUD' selected=(user.settings && user.settings.preferredCurrency === 'AUD')) AUD - Australian Dollar (A$)
+          
+          // Notification Settings
+          h6.fw-semibold.mb-3 Notification Settings
+          .form-check.form-switch.mb-3
+            input.form-check-input#emailNotifications(type='checkbox' checked=(user.settings && user.settings.notifications && user.settings.notifications.emailNotifications))
+            label.form-check-label(for='emailNotifications')
+              .fw-semibold Email Notifications
+              .small.text-muted.d-block Receive budget alerts and tips via email
+          .form-check.form-switch.mb-3
+            input.form-check-input#pushNotifications(type='checkbox' checked=(user.settings && user.settings.notifications && user.settings.notifications.pushNotifications))
+            label.form-check-label(for='pushNotifications')
+              .fw-semibold Push Notifications
+              .small.text-muted.d-block Get instant alerts on your device
+          .form-check.form-switch.mb-3
+            input.form-check-input#monthlyReports(type='checkbox' checked=(user.settings && user.settings.notifications && user.settings.notifications.monthlyReports))
+            label.form-check-label(for='monthlyReports')
+              .fw-semibold Monthly Reports
+              .small.text-muted.d-block Receive monthly spending summaries
+          .form-check.form-switch.mb-4
+            input.form-check-input#savingsAchievements(type='checkbox' checked=(user.settings && user.settings.notifications && user.settings.notifications.savingsAchievements))
+            label.form-check-label(for='savingsAchievements')
+              .fw-semibold Savings Achievements
+              .small.text-muted.d-block Get notified when you reach savings goals
+          
+          button.btn.btn-primary(type='button' onclick='updateSettings()')
+            i.bi.bi-save.me-2
+            | Save Preferences
+
+block scripts
+  // JS logic from your original file — unchanged, since it already matches your backend API exactly.
