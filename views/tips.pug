@@ -1,0 +1,108 @@
+extends layout-sidebar
+
+block content
+  // Tips Header
+  .mb-4
+    h1.dashboard-title.mb-1 Tips & Insights
+    p.dashboard-subtitle.text-muted.mb-0 Smart recommendations to help you save money
+  
+  // Tips Grid
+  .row
+    if tips && tips.length > 0
+      each tip in tips
+        .col-md-6.mb-4
+          .card.shadow-sm.h-100
+            .card-body
+              .d-flex.align-items-start.gap-3
+                .flex-shrink-0
+                  .rounded-circle.d-flex.align-items-center.justify-content-center(
+                    class=tip.type === 'critical' ? 'bg-warning text-dark' : tip.type === 'warning' ? 'bg-info text-white' : 'bg-success text-white',
+                    style='width: 48px; height: 48px;'
+                  )
+                    i.bi(
+                      class=tip.type === 'critical' ? 'bi-exclamation-triangle' : tip.type === 'warning' ? 'bi-lightbulb' : 'bi-check-circle'
+                    )
+                .flex-grow-1
+                  h5.mb-2= tip.title || 'Budget Tip'
+                  p.text-muted.mb-3= tip.content || (tip.tip && tip.tip.content) || tip.message
+                  
+                  if tip.context
+                    .d-flex.gap-2.flex-wrap
+                      if tip.context.category
+                        span.badge.bg-primary= tip.context.category
+                      if tip.context.percentage
+                        span.badge.bg-warning= tip.context.percentage + '% of budget'
+                      if tip.context.savedAmount
+                        span.badge.bg-success= `Potential savings: ${CurrencyHelper.format(tip.context.savedAmount, userCurrency)}`
+    else
+      .col-12
+        .text-center.py-5
+          .mb-4
+            i.bi.bi-lightbulb-off.display-4.text-muted
+          h4.mb-2 No tips available yet
+          p.text-muted.mb-4 Start tracking your expenses to receive personalized money-saving tips
+          a.btn.btn-primary(href='/items/add') Add Your First Item
+  
+  // Educational Content
+  .mt-5
+    h3.mb-4 Money Saving Guide
+    .row
+      .col-md-4.mb-4
+        .card.shadow-sm.h-100
+          .card-body
+            .rounded-circle.bg-primary.text-white.d-flex.align-items-center.justify-content-center.mb-3(style='width:48px;height:48px;')
+              i.bi.bi-cart3
+            h5 Smart Shopping
+            ul.list-unstyled.text-muted.mt-3
+              li.mb-2
+                i.bi.bi-check-circle.text-success.me-2
+                | Compare prices across stores
+              li.mb-2
+                i.bi.bi-check-circle.text-success.me-2
+                | Buy generic brands
+              li.mb-2
+                i.bi.bi-check-circle.text-success.me-2
+                | Use loyalty programs
+              li
+                i.bi.bi-check-circle.text-success.me-2
+                | Shop with a list
+      
+      .col-md-4.mb-4
+        .card.shadow-sm.h-100
+          .card-body
+            .rounded-circle.bg-success.text-white.d-flex.align-items-center.justify-content-center.mb-3(style='width:48px;height:48px;')
+              i.bi.bi-calendar-week
+            h5 Planning Ahead
+            ul.list-unstyled.text-muted.mt-3
+              li.mb-2
+                i.bi.bi-check-circle.text-success.me-2
+                | Meal prep weekly
+              li.mb-2
+                i.bi.bi-check-circle.text-success.me-2
+                | Buy seasonal produce
+              li.mb-2
+                i.bi.bi-check-circle.text-success.me-2
+                | Stock up during sales
+              li
+                i.bi.bi-check-circle.text-success.me-2
+                | Avoid impulse buying
+      
+      .col-md-4.mb-4
+        .card.shadow-sm.h-100
+          .card-body
+            .rounded-circle.bg-warning.text-dark.d-flex.align-items-center.justify-content-center.mb-3(style='width:48px;height:48px;')
+              i.bi.bi-piggy-bank
+            h5 Budget Strategies
+            ul.list-unstyled.text-muted.mt-3
+              li.mb-2
+                i.bi.bi-check-circle.text-success.me-2
+                | Use the 50/30/20 rule
+              li.mb-2
+                i.bi.bi-check-circle.text-success.me-2
+                | Track every expense
+              li.mb-2
+                i.bi.bi-check-circle.text-success.me-2
+                | Set realistic limits
+              li
+                i.bi.bi-check-circle.text-success.me-2
+                | Review weekly spending
