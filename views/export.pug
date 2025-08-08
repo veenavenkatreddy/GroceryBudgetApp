@@ -1,0 +1,66 @@
+extends layout-sidebar
+
+block content
+  // Page Header
+  .mb-4
+    h1.dashboard-title.mb-1 Download Budget Report
+    p.dashboard-subtitle.text-muted.mb-0 Get a comprehensive PDF report of your budget and spending
+  
+  // Export Options
+  .row.justify-content-center
+    .col-lg-8
+      .card.shadow-sm
+        .card-body
+          h5.mb-4
+            i.bi.bi-file-earmark-pdf.me-2
+            | Budget Report Download
+          if budgets && budgets.length > 0
+            // Budget Select
+            .mb-4
+              label.form-label.fw-semibold(for='budgetSelect') Select Budget to Download
+              select.form-select#budgetSelect
+                option(value='') Choose a budget...
+                each budget in budgets
+                  option(value=budget._id)= budget.name + ' (' + new Date(budget.period.start).toLocaleDateString() + ' - ' + new Date(budget.period.end).toLocaleDateString() + ')'
+            
+            // Report Info
+            .text-center
+              .d-flex.flex-column.flex-sm-row.align-items-center.justify-content-center.mb-4
+                .bg-primary.bg-opacity-10.text-primary.rounded-circle.d-flex.align-items-center.justify-content-center.me-0.me-sm-3.mb-3.mb-sm-0(style='width: 60px; height: 60px;')
+                  i.bi.bi-file-earmark-pdf(style='font-size: 2rem;')
+                div
+                  h4.mb-1 Budget Report
+                  p.text-muted.mb-0 Complete budget summary with spending breakdown
+            
+            // Download Button
+            .d-grid.d-sm-inline-block
+              button.btn.btn-primary.btn-lg.px-5#downloadButton(disabled)
+                i.bi.bi-download.me-2
+                | Download Report
+          else
+            // Empty State
+            .text-center.py-5
+              i.bi.bi-folder-x.display-4.text-muted.mb-3
+              h4.mb-1 No budgets to download
+              p.text-muted.mb-4 Create a budget first to generate reports
+              a.btn.btn-primary(href='/budgets') Create Budget
+
+block scripts
+  script.
+    const budgetSelect = document.getElementById('budgetSelect');
+    const downloadButton = document.getElementById('downloadButton');
+    
+    if (budgetSelect) {
+      budgetSelect.addEventListener('change', function() {
+        downloadButton.disabled = this.value === '';
+      });
+    }
+    
+    if (downloadButton) {
+      downloadButton.addEventListener('click', function() {
+        const budgetId = budgetSelect.value;
+        if (budgetId) {
+          window.open(`/api/export/budget/${budgetId}/pdf`, '_blank');
+        }
+      });
+    }
