@@ -87,4 +87,10 @@ router.get('/profile', protect, async (req, res) => {
   });
 });
 
+//error page
+router.get('/error', async (req, res) => {
+  res.render('error');
+});
+
+
 module.exports = router;
