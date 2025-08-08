@@ -1,0 +1,33 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title= title
+    link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet')
+    link(rel='stylesheet' href='/css/style.css')
+  body.bg-light
+    .container.py-5
+      .row.justify-content-center
+        .col-lg-6.col-md-8
+          .card.shadow-lg.border-0
+            .card-body.text-center.p-5
+              // Status code
+              h1.display-1.fw-bold.text-danger.mb-0= status
+              
+              // Error message
+              h4.text-dark.mb-4= message
+              
+              // Optional stack trace (for dev/debug mode)
+              if error && error.stack
+                .text-start.mt-3
+                  pre.bg-light.p-3.rounded.small.mb-0.text-muted= error.stack
+              
+              // Action buttons
+              .mt-4.d-flex.justify-content-center.flex-wrap.gap-2
+                a.btn.btn-primary(href='/')
+                  i.bi.bi-house-door.me-2
+                  | Go Home
+                a.btn.btn-outline-secondary(href='javascript:history.back()')
+                  i.bi.bi-arrow-left.me-2
+                  | Go Back
