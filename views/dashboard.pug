@@ -1,0 +1,177 @@
+extends layout-sidebar
+
+block content
+  // Dashboard Header
+  .dashboard-header.mb-4
+    h1.dashboard-title Dashboard
+    p.dashboard-subtitle Welcome back, #{user.username}! Here's your budget overview.
+  
+  // Metric Cards
+  .row.row-cols-1.row-cols-md-2.row-cols-lg-4.g-3.mb-4
+    .col
+      .card.h-100.text-center.p-3
+        .metric-icon.text-primary.mb-2
+          i.bi.bi-wallet2.fs-3
+        h5.mb-0= CurrencyHelper.format(budget ? budget.totalLimit : 0, userCurrency)
+        small.text-muted Total Budget
+    .col
+      .card.h-100.text-center.p-3
+        .metric-icon.text-success.mb-2
+          i.bi.bi-bag-check.fs-3
+        h5.mb-0= CurrencyHelper.format(budget ? budget.currentSpent : 0, userCurrency)
+        small.text-muted Spent
+    .col
+      .card.h-100.text-center.p-3
+        .metric-icon.text-warning.mb-2
+          i.bi.bi-piggy-bank.fs-3
+        h5.mb-0= CurrencyHelper.format(budget ? budget.remainingBudget : 0, userCurrency)
+        small.text-muted Remaining
+    .col
+      .card.h-100.text-center.p-3
+        .metric-icon.text-info.mb-2
+          i.bi.bi-graph-up.fs-3
+        h5.mb-0 #{budget ? budget.percentageSpent.toFixed(0) : '0'}%
+        small.text-muted Budget Used
+  
+  // Charts Section
+  .row.g-4
+    .col-lg-6
+      .card.h-100
+        .card-header.d-flex.justify-content-between.align-items-center
+          h5.mb-0
+            i.bi.bi-graph-up.me-2
+            | Spending Trend
+          select.form-select.form-select-sm(style='width: 120px;')
+            option(value='week') This Week
+            option(value='month' selected) This Month
+            option(value='year') This Year
+        .card-body
+          .chart-container(style='height: 240px;')
+            canvas#spendingChart
+          .mt-3.border-top.pt-3
+            .d-flex.gap-3
+              span.d-flex.align-items-center
+                span.rounded-circle.me-2(style='background:#4F46E5;width:12px;height:12px;display:inline-block;')
+                | Current Period
+              span.d-flex.align-items-center
+                span.rounded-circle.me-2(style='background:#E5E7EB;width:12px;height:12px;display:inline-block;')
+                | Previous Period
+    .col-lg-6
+      .card.h-100
+        .card-header
+          h5.mb-0
+            i.bi.bi-pie-chart.me-2
+            | Category Breakdown
+        .card-body
+          .chart-container(style='height:200px;')
+            canvas#categoryChart
+          #categoryLegend.mt-3.border-top.pt-3
+  
+  // Recent Transactions & Tips
+  .row.mt-4.g-4
+    .col-lg-6
+      .card.h-100
+        .card-header.d-flex.justify-content-between.align-items-center
+          h5.mb-0
+            i.bi.bi-clock-history.me-2
+            | Recent Transactions
+          a.btn.btn-outline-secondary.btn-sm(href='/items') View All
+        .card-body
+          if recentItems && recentItems.length > 0
+            ul.list-group.list-group-flush
+              each item in recentItems.slice(0, 5)
+                li.list-group-item.d-flex.justify-content-between.align-items-center
+                  div
+                    strong= item.name
+                    div.text-muted.small= item.categoryId.name
+                  span= CurrencyHelper.format(item.price, userCurrency)
+          else
+            .text-center.py-4
+              i.bi.bi-receipt.display-6.text-muted
+              p.mt-3.mb-1.fw-semibold No transactions yet
+              small.text-muted Start tracking your purchases
+              br
+              a.btn.btn-primary.btn-sm.mt-3(href='/items/add') Add First Item
+    .col-lg-6
+      .card.h-100
+        .card-header.d-flex.justify-content-between.align-items-center
+          h5.mb-0
+            i.bi.bi-lightbulb.me-2
+            | Smart Tips
+          a.btn.btn-outline-secondary.btn-sm(href='/tips') See More
+        .card-body
+          if tips && tips.length > 0
+            each tip, index in tips.slice(0, 3)
+              .alert(class=`alert-${index === 0 ? 'info' : 'light'}`)= tip.content || tip.tip.content
+          else
+            .text-center.py-4
+              i.bi.bi-lightbulb-off.display-6.text-muted
+              p.mt-3.mb-1.fw-semibold No tips available
+              small.text-muted Tips will appear as you track expenses
+
+block scripts
+  style.
+    #spendingChart, #categoryChart { max-width: 100%; max-height: 100%; }
+    .chart-container canvas { width: 100% !important; height: 100% !important; }
+  script.
+    // Chart.js configuration (same as your original)
+    Chart.defaults.font.family = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+    Chart.defaults.font.size = 12;
+    Chart.defaults.color = '#6B7280';
+
+    const budgetData = !{JSON.stringify(budget || {})};
+    const categorySpending = !{JSON.stringify(categorySpending || [])};
+    const weeklySpending = !{JSON.stringify(weeklySpending || [])};
+
+    // Spending Chart
+    const spendingCtx = document.getElementById('spendingChart').getContext('2d');
+    new Chart(spendingCtx, {
+      type: 'line',
+      data: {
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+        datasets: [{
+          label: 'Current Month',
+          data: weeklySpending.map(w => w.amount) || [65, 80, 120, 150],
+          borderColor: '#4F46E5',
+          backgroundColor: 'rgba(79, 70, 229, 0.05)',
+          borderWidth: 2,
+          tension: 0.4,
+          fill: true
+        }, {
+          label: 'Previous Month',
+          data: [50, 70, 100, 140],
+          borderColor: '#E5E7EB',
+          borderWidth: 2,
+          tension: 0.4,
+          borderDash: [5, 5]
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // Category Chart
+    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+    const categoryColors = ['#4F46E5', '#10B981', '#F59E0B', '#EF4444', '#3B82F6', '#8B5CF6', '#EC4899', '#14B8A6'];
+    const categoryChart = new Chart(categoryCtx, {
+      type: 'doughnut',
+      data: {
+        labels: categorySpending.map(c => c.category) || ['Groceries', 'Produce', 'Dairy', 'Snacks'],
+        datasets: [{
+          data: categorySpending.map(c => c.amount) || [120, 80, 60, 40],
+          backgroundColor: categoryColors
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { display: false } } }
+    });
+
+    // Legend
+    const legendContainer = document.getElementById('categoryLegend');
+    categoryChart.data.labels.forEach((label, index) => {
+      const value = categoryChart.data.datasets[0].data[index];
+      const total = categoryChart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+      const percentage = ((value / total) * 100).toFixed(1);
+      legendContainer.innerHTML += `<div class="d-flex align-items-center mb-1">
+        <span class="rounded-circle me-2" style="background:${categoryColors[index]};width:12px;height:12px;display:inline-block;"></span>
+        ${label} (${percentage}%)
+      </div>`;
+    });

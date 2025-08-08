@@ -33,6 +33,14 @@ router.get('/login', async (req, res) => {
   });
 });
 
+router.get('/dashboard', protect, async (req, res) => {
+  res.render('dasboard', {
+    title: 'Dashboard',
+    activeTab: 'dashboard',
+    user: req.user
+  });
+});
+
 // Budgets - protected
 router.get('/budgets', protect, async (req, res) => {
   res.render('budgets', {
