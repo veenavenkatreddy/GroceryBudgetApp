@@ -10,7 +10,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const itemRoutes = require('./routes/itemRoutes');
 const tipsRoutes = require('./routes/tipsRoutes');
 const exportRoutes = require('./routes/exportRoutes');
-//const historyRoutes = require('./routes/historyRoutes');
+const historyRoutes = require('./routes/historyRoutes');
 
 const app = express();
 
@@ -38,6 +38,6 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/items', itemRoutes);
 app.use('/api/tips', tipsRoutes);
 app.use('/api/export', exportRoutes);
-//app.use('/api/history', historyRoutes);
+app.use('/api/history', historyRoutes);
 
 module.exports = app;

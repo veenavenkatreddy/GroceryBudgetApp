@@ -1,14 +1,108 @@
 doctype html
-html
+html(lang='en')
   head
     meta(charset='UTF-8')
     meta(name='viewport' content='width=device-width, initial-scale=1.0')
     meta(name='description' content='CartWise - Shop Smart, Save More')
-    title= "Cartwise"
-
-    //- Bootstrap CSS
+    
+    title= title || 'CartWise'
+    
+    //- Google Fonts
+    link(href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap' rel='stylesheet')
+    
+    //- Bootstrap CSS & Icons
     link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet')
     link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css')
-
+    
+    //- Chart.js
+    script(src='https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.js')
+    
+    //- Custom CSS
+    link(rel='stylesheet' href='/css/dashboard-modern.css')
+    
   body
-    block content
+    .dashboard-container
+      //- Sidebar
+      nav.sidebar#sidebar
+        .sidebar-header
+          a.sidebar-brand(href='/dashboard')
+            i.bi.bi-cart3
+            span CartWise
+        
+        .sidebar-menu
+          a.sidebar-item(href='/dashboard' class=(activeTab === 'dashboard' ? 'active' : ''))
+            i.bi.bi-house
+            span Dashboard
+          a.sidebar-item(href='/budgets' class=(activeTab === 'budgets' ? 'active' : ''))
+            i.bi.bi-wallet2
+            span Budgets
+          a.sidebar-item(href='/items' class=(activeTab === 'items' ? 'active' : ''))
+            i.bi.bi-bag
+            span Items
+          a.sidebar-item(href='/tips' class=(activeTab === 'tips' ? 'active' : ''))
+            i.bi.bi-lightbulb
+            span Tips
+          a.sidebar-item(href='/export' class=(activeTab === 'export' ? 'active' : ''))
+            i.bi.bi-download
+            span Export
+        
+        .sidebar-footer
+          a.sidebar-user(href='/profile')
+            .user-avatar
+              i.bi.bi-person-circle
+            .user-info
+              .user-name= user.username
+              .user-role Web User
+          a.sidebar-item(href='#' onclick='logout()')
+            i.bi.bi-box-arrow-left
+            span Logout
+      
+      //- Main Content
+      .main-content
+        .top-bar
+          button.menu-toggle#sidebarToggle
+            i.bi.bi-list
+          .top-bar-actions
+            button.top-bar-icon#syncButton
+              i.bi.bi-arrow-repeat
+            a.top-bar-icon(href='/settings' title='Settings')
+              i.bi.bi-gear
+        
+        .page-content
+          block content
+    
+    //- Bootstrap JS
+    script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js')
+    
+    //- API utility
+    script(src='/js/api.js')
+    
+    //- JS
+    script.
+      // Auth check
+      const token = localStorage.getItem('token');
+      const publicPaths = ['/login', '/register', '/', '/forgot-password'];
+      if (!token && !publicPaths.includes(window.location.pathname)) {
+        window.location.href = '/login';
+      }
+      
+      // Sidebar toggle
+      const sidebar = document.getElementById('sidebar');
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('active');
+      });
+      
+      // Logout
+      async function logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        try {
+          await fetch('/api/auth/logout', { method: 'POST' });
+        } catch (e) {
+          console.error(e);
+        }
+        window.location.replace('/login?logout=true');
+      }
+    
+    block scripts
