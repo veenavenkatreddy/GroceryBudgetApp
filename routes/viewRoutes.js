@@ -16,11 +16,19 @@ router.get('/', (req, res) => {
   });
 });
 
-// Dashboard - protected
-router.get('/dashboard', protect, async (req, res) => {
-  res.render('dashboard', {
-    title: 'Dashboard',
-    activeTab: 'dashboard',
+router.get('/register', async (req, res) => {
+  res.render('register', {
+    title: 'CartWise Register',
+    activeTab: 'Register',
+    user: req.user
+  });
+});
+
+
+router.get('/login', async (req, res) => {
+  res.render('login', {
+    title: 'CartWise Login',
+    activeTab: 'Login',
     user: req.user
   });
 });
